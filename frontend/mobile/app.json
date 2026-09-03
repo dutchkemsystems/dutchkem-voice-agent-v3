@@ -1,25 +1,68 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Dutchkem Voice Agent",
+    "slug": "dutchkem-voice-agent",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a1a2e"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dutchkem.voiceagent",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Dutchkem Voice Agent needs microphone access for background audio monitoring and interview sessions.",
+        "NSCameraUsageDescription": "Dutchkem Voice Agent needs camera access for background video monitoring and face registration.",
+        "NSPhotoLibraryUsageDescription": "Dutchkem Voice Agent needs photo access to save and retrieve voice recordings.",
+        "NSSpeechRecognitionUsageDescription": "Dutchkem Voice Agent needs speech recognition for interview trigger detection."
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#1a1a2e",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "package": "com.dutchkem.voiceagent",
+      "permissions": [
+        "RECORD_AUDIO",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "FOREGROUND_SERVICE",
+        "WAKE_LOCK",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Dutchkem Voice Agent needs camera access for background video monitoring and face registration."
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Dutchkem Voice Agent needs microphone access for background audio monitoring."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#1a1a2e"
+        }
+      ]
+    ]
   }
 }
