@@ -1,0 +1,28 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+sqlalchemy[asyncio]==2.0.35
+asyncpg==0.30.0
+motor==3.5.0
+redis==5.1.0
+pydantic==2.9.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.9
+celery==5.4.0
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+# Voice/Face AI
+faster-whisper==1.0.3
+chatterbox-tts==0.1.0
+insightface==0.7.3
+onnxruntime-gpu==1.19.0
+# Background monitoring
+sounddevice==0.4.6
+vidgear==0.3.3
+webrtcvad==2.0.10
+noisereduce==3.0.0
+# LLM (free, local)
+ollama==0.3.0
+# Security
+cryptography==43.0.0
+slowapi==0.1.9

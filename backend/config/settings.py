@@ -1,0 +1,27 @@
+import os
+from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
+
+
+class Settings(BaseSettings):
+    model_config = ConfigDict(env_file=".env", extra="ignore")
+
+    APP_NAME: str = "Dutchkem Voice Agent"
+    APP_VERSION: str = "3.0.0"
+    DEBUG: bool = os.getenv("DEBUG", "false").lower() == "true"
+
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL",
+        "postgresql+asyncpg://dutchkem:password@localhost:5432/dutchkem_voice",
+    )
+    MONGODB_URL: str = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379")
+
+    JWT_SECRET: str = os.getenv("JWT_SECRET", "change-me-in-production")
+    JWT_ALGORITHM: str = "HS256"
+    JWT_EXPIRATION_MINUTES: int = 60
+
+    CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:8081"]
+
+
+settings = Settings()
