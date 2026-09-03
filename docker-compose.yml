@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   # PostgreSQL Database
   postgres:
@@ -8,14 +6,14 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-dutchkem_voice}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-dutchkem}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dutchkem}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +26,7 @@ services:
     environment:
       MONGO_INITDB_DATABASE: ${MONGODB_DB:-dutchkem_voice}
     ports:
-      - "27017:27017"
+      - "${MONGODB_PORT:-27017}:27017"
     volumes:
       - mongodb_data:/data/db
     healthcheck:
@@ -43,7 +41,7 @@ services:
     container_name: dutchkem_redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -60,17 +58,15 @@ services:
     container_name: dutchkem_backend
     restart: unless-stopped
     environment:
-      - DEBUG=${DEBUG:-True}
-      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=${POSTGRES_DB:-dutchkem_voice}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - DEBUG=${DEBUG:-false}
+      - SECRET_KEY=${SECRET_KEY:?Set SECRET_KEY in .env}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-dutchkem}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-dutchkem_voice}
+      - MONGODB_URL=mongodb://mongodb:27017/${MONGODB_DB:-dutchkem_voice}
       - REDIS_URL=redis://redis:6379/0
-      - MONGODB_URI=mongodb://mongodb:27017
+      - JWT_SECRET=${JWT_SECRET:?Set JWT_SECRET in .env}
+      - CORS_ORIGINS=["http://localhost:3000","http://localhost:8081"]
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT:-8000}:8000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -79,7 +75,6 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - ./backend:/app
       - model_cache:/app/models
 
   # Web Frontend
@@ -90,9 +85,9 @@ services:
     container_name: dutchkem_frontend_web
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT:-3000}:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT:-8000}
     depends_on:
       - backend
 
