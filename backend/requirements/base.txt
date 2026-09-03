@@ -22,6 +22,7 @@ sounddevice==0.4.6
 vidgear==0.3.3
 webrtcvad==2.0.10
 noisereduce==3.0.0
+mediapipe==0.10.14
 # LLM (free, local)
 ollama==0.3.0
 httpx==0.27.2
