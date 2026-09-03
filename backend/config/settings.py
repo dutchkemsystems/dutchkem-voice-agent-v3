@@ -23,5 +23,7 @@ class Settings(BaseSettings):
 
     CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:8081"]
 
+    ENCRYPTION_KEY: str = os.getenv("ENCRYPTION_KEY", "default-dev-key")
+
 
 settings = Settings()
