@@ -29,3 +29,18 @@ class CloneResponse(BaseModel):
 
 class ListProfilesResponse(BaseModel):
     profiles: list[VoiceProfileResponse]
+
+
+class TTSRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=5000)
+    voice: str = Field(default="af_heart", description="Voice name or accent (nigerian, ghanaian, uk, us, japanese)")
+
+
+class TTSResponse(BaseModel):
+    audio_base64: str
+    duration_ms: int = 0
+
+
+class TTSStreamRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=5000)
+    voice: str = Field(default="af_heart")
