@@ -55,3 +55,6 @@ models/
 *.pt
 *.pth
 *.bin
+uploads/voice/
+.hive/
+.hive2/
