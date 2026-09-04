@@ -34,10 +34,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#FF6B6B]/10 via-[#FF8E53]/10 to-[#81ECEC]/10 px-4">
+      <Card variant="glass" className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Create Account</CardTitle>
+          <CardTitle className="text-2xl text-gradient-sunset">Create Account</CardTitle>
           <CardDescription>Get started with DutchKem Voice Agent</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -83,12 +83,12 @@ export default function RegisterPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button variant="sunset" type="submit" className="w-full" disabled={loading}>
               {loading ? "Creating account..." : "Create Account"}
             </Button>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-[#6c757d]">
               Already have an account?{" "}
-              <Link href="/login" className="text-primary underline-offset-4 hover:underline">
+              <Link href="/login" className="text-[#FF6B6B] underline-offset-4 hover:underline">
                 Sign in
               </Link>
             </p>

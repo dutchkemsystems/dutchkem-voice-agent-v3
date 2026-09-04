@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { GradientHeader } from "@/components/ColourfulComponents/GradientHeader";
+import { Mic, MicOff, Play, Square } from "lucide-react";
 
 export default function InterviewPage() {
   const [session, setSession] = useState<InterviewSession | null>(null);
@@ -69,10 +71,7 @@ export default function InterviewPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Interview Session</h1>
-        <p className="text-muted-foreground">Start and manage your AI interview session.</p>
-      </div>
+      <GradientHeader title="Interview Session" subtitle="Start and manage your AI interview session." />
 
       {error && (
         <Alert variant="destructive">
@@ -81,12 +80,12 @@ export default function InterviewPage() {
       )}
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+        <Card variant="glass" className="lg:col-span-2">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Session Control</CardTitle>
+              <CardTitle className="text-gradient-sunset">Session Control</CardTitle>
               {session && (
-                <Badge variant={isActive ? "default" : "secondary"}>
+                <Badge variant={isActive ? "sunset" : "secondary"}>
                   {session.status}
                 </Badge>
               )}
@@ -100,33 +99,35 @@ export default function InterviewPage() {
           <CardContent className="space-y-4">
             <div className="flex gap-4">
               {!isActive ? (
-                <Button onClick={startSession} disabled={loading} size="lg">
+                <Button variant="sunset" onClick={startSession} disabled={loading} size="lg" className="gap-2">
+                  <Play className="h-5 w-5" />
                   {loading ? "Starting..." : "Start Interview"}
                 </Button>
               ) : (
-                <Button onClick={stopSession} disabled={loading} variant="destructive" size="lg">
+                <Button onClick={stopSession} disabled={loading} variant="destructive" size="lg" className="gap-2">
+                  <Square className="h-5 w-5" />
                   {loading ? "Stopping..." : "Stop Interview"}
                 </Button>
               )}
             </div>
 
             {isActive && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
+              <div className="flex items-center gap-2 text-sm text-[#FF6B6B]">
+                <Mic className="h-4 w-4 animate-pulse" />
                 Recording in progress...
               </div>
             )}
 
-            <div className="rounded-lg border bg-muted/50 p-4">
-              <h3 className="mb-2 text-sm font-medium">Transcript</h3>
+            <div className="rounded-xl border border-[#FF6B6B]/20 bg-[#FF6B6B]/5 p-4">
+              <h3 className="mb-2 text-sm font-medium text-[#1A1A2E]">Transcript</h3>
               <div className="max-h-64 space-y-2 overflow-y-auto text-sm">
                 {transcript.length === 0 ? (
-                  <p className="text-muted-foreground">
+                  <p className="text-[#6c757d]">
                     {isActive ? "Listening..." : "No transcript yet. Start an interview to begin."}
                   </p>
                 ) : (
                   transcript.map((line, i) => (
-                    <p key={i} className="text-foreground">
+                    <p key={i} className="text-[#1A1A2E]">
                       {line}
                     </p>
                   ))
@@ -136,43 +137,43 @@ export default function InterviewPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card variant="glass">
           <CardHeader>
-            <CardTitle>Session Info</CardTitle>
+            <CardTitle className="text-gradient-sunset">Session Info</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {session ? (
               <>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Session ID</span>
+                  <span className="text-[#6c757d]">Session ID</span>
                   <span className="font-mono text-xs">{session.id.slice(0, 8)}...</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Status</span>
-                  <Badge variant={isActive ? "default" : "secondary"}>
+                  <span className="text-[#6c757d]">Status</span>
+                  <Badge variant={isActive ? "sunset" : "secondary"}>
                     {session.status}
                   </Badge>
                 </div>
                 {session.started_at && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Started</span>
+                    <span className="text-[#6c757d]">Started</span>
                     <span>{new Date(session.started_at).toLocaleTimeString()}</span>
                   </div>
                 )}
                 {session.ended_at && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Ended</span>
+                    <span className="text-[#6c757d]">Ended</span>
                     <span>{new Date(session.ended_at).toLocaleTimeString()}</span>
                   </div>
                 )}
               </>
             ) : (
-              <p className="text-sm text-muted-foreground">No active session</p>
+              <p className="text-sm text-[#6c757d]">No active session</p>
             )}
 
-            <div className="border-t pt-3">
-              <h4 className="mb-2 text-sm font-medium">Capabilities</h4>
-              <ul className="space-y-1 text-sm text-muted-foreground">
+            <div className="border-t border-[#FF6B6B]/10 pt-3">
+              <h4 className="mb-2 text-sm font-medium text-[#1A1A2E]">Capabilities</h4>
+              <ul className="space-y-1 text-sm text-[#6c757d]">
                 <li>• Voice transcription (STT)</li>
                 <li>• AI-generated responses (LLM)</li>
                 <li>• Deepfake detection</li>
