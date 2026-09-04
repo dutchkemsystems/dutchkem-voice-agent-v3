@@ -17,6 +17,9 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        sunset: "bg-gradient-to-r from-[#FF6B6B] to-[#FF8E53] text-white shadow hover:shadow-lg hover:scale-105 transition-all duration-300",
+        ocean: "bg-gradient-to-r from-[#55EFC4] to-[#81ECEC] text-white shadow hover:shadow-lg hover:scale-105 transition-all duration-300",
+        tropical: "bg-gradient-to-r from-[#FF6B6B] via-[#FECA57] to-[#55EFC4] text-white shadow hover:shadow-lg hover:scale-105 transition-all duration-300",
       },
       size: {
         default: "h-9 px-4 py-2",

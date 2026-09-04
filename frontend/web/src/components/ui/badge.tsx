@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const Badge = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "secondary" | "destructive" | "outline" }>(
+const Badge = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "secondary" | "destructive" | "outline" | "sunset" | "ocean" | "tropical" }>(
   ({ className, variant = "default", ...props }, ref) => {
     return (
       <div
@@ -16,6 +16,12 @@ const Badge = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEleme
             "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80":
               variant === "destructive",
             "text-foreground": variant === "outline",
+            "border-transparent bg-gradient-to-r from-[#FF6B6B] to-[#FF8E53] text-white shadow":
+              variant === "sunset",
+            "border-transparent bg-gradient-to-r from-[#55EFC4] to-[#81ECEC] text-white shadow":
+              variant === "ocean",
+            "border-transparent bg-gradient-to-r from-[#FF6B6B] via-[#FECA57] to-[#55EFC4] text-white shadow":
+              variant === "tropical",
           },
           className
         )}
