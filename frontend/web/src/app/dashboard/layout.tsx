@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { api, ModeInfo } from "@/lib/api";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: "📊" },
@@ -13,9 +15,58 @@ const navItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [modes, setModes] = useState<ModeInfo[]>([]);
+  const [currentMode, setCurrentMode] = useState<ModeInfo | null>(null);
+  const [loadingModes, setLoadingModes] = useState(true);
+
+  useEffect(() => {
+    async function loadModes() {
+      try {
+        const { modes: modeList } = await api.modes.list();
+        setModes(modeList);
+        const savedModeId = localStorage.getItem("currentMode") || "interview";
+        const active = modeList.find((m) => m.mode_id === savedModeId) || modeList[0];
+        setCurrentMode(active);
+      } catch {
+        // API not available, use default
+        setCurrentMode({
+          mode_id: "interview",
+          display_name: "Interview",
+          description: "Default interview mode",
+          icon: "🎤",
+          agent_classes: [],
+          default_agent: "hr_agent",
+          required_context: [],
+          ui_components: [],
+          default_view: "transcript",
+        });
+      } finally {
+        setLoadingModes(false);
+      }
+    }
+    loadModes();
+  }, []);
+
+  async function handleModeSwitch(modeId: string) {
+    try {
+      const result = await api.modes.switch(modeId);
+      if (result.success) {
+        setCurrentMode(result.mode);
+        localStorage.setItem("currentMode", modeId);
+      }
+    } catch {
+      // Fallback to local state
+      const mode = modes.find((m) => m.mode_id === modeId);
+      if (mode) {
+        setCurrentMode(mode);
+        localStorage.setItem("currentMode", modeId);
+      }
+    }
+  }
 
   function handleLogout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("currentMode");
     router.push("/login");
   }
 
@@ -27,6 +78,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             DutchKem
           </Link>
         </div>
+
+        {/* Mode Selector */}
+        <div className="border-b p-4">
+          <label className="text-xs font-medium text-sidebar-foreground/70 uppercase tracking-wider">
+            Mode
+          </label>
+          {loadingModes ? (
+            <div className="mt-1 h-9 animate-pulse rounded-md bg-sidebar-accent" />
+          ) : (
+            <select
+              value={currentMode?.mode_id || "interview"}
+              onChange={(e) => handleModeSwitch(e.target.value)}
+              className="mt-1 w-full rounded-md border border-sidebar-border bg-sidebar px-3 py-2 text-sm text-sidebar-foreground focus:outline-none focus:ring-2 focus:ring-sidebar-accent"
+            >
+              {modes.map((mode) => (
+                <option key={mode.mode_id} value={mode.mode_id}>
+                  {mode.icon} {mode.display_name}
+                </option>
+              ))}
+            </select>
+          )}
+          {currentMode && (
+            <p className="mt-1 text-xs text-sidebar-foreground/50">{currentMode.description}</p>
+          )}
+        </div>
+
         <nav className="flex flex-col gap-1 p-4">
           {navItems.map((item) => (
             <Link
@@ -83,6 +160,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </button>
           </div>
         </header>
+
+        {/* Mobile Mode Badge */}
+        <div className="flex items-center gap-2 border-b px-4 py-2 lg:hidden">
+          <span className="text-xs text-muted-foreground">Mode:</span>
+          <select
+            value={currentMode?.mode_id || "interview"}
+            onChange={(e) => handleModeSwitch(e.target.value)}
+            className="rounded-md border px-2 py-1 text-xs"
+          >
+            {modes.map((mode) => (
+              <option key={mode.mode_id} value={mode.mode_id}>
+                {mode.icon} {mode.display_name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <main className="flex-1 overflow-auto p-4 lg:p-8">{children}</main>
       </div>

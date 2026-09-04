@@ -64,6 +64,18 @@ export interface InterviewSession {
   ended_at?: string;
 }
 
+export interface ModeInfo {
+  mode_id: string;
+  display_name: string;
+  description: string;
+  icon: string;
+  agent_classes: string[];
+  default_agent: string;
+  required_context: string[];
+  ui_components: string[];
+  default_view: string;
+}
+
 export const api = {
   auth: {
     login: (email: string, password: string) =>
@@ -122,5 +134,19 @@ export const api = {
       request<InterviewSession>(`${API_BASE}/interview/${sessionId}/stop`, {
         method: "POST",
       }),
+  },
+  modes: {
+    list: () =>
+      request<{ modes: ModeInfo[]; count: number }>(`${API_BASE}/api/modes/`),
+    get: (modeId: string) =>
+      request<ModeInfo>(`${API_BASE}/api/modes/${modeId}`),
+    switch: (modeId: string, context?: Record<string, unknown>) =>
+      request<{ success: boolean; mode: ModeInfo; message: string }>(
+        `${API_BASE}/api/modes/switch`,
+        {
+          method: "POST",
+          body: JSON.stringify({ mode_id: modeId, context }),
+        }
+      ),
   },
 };
