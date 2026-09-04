@@ -1,15 +1,7 @@
 # Render Blueprint — dutchkem-voice-agent-v3
-# Auto-deploys from GitHub on push to master
 # Docs: https://render.com/docs/blueprint-spec
 
 services:
-  # ── PostgreSQL ──────────────────────────────────────────
-  - name: dutchkem-postgres
-    type: postgresql
-    plan: free
-    databaseName: dutchkem_voice
-    ipAllowList: []  # only internal
-
   # ── Backend API ────────────────────────────────────────
   - name: dutchkem-backend
     type: web
@@ -25,9 +17,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: DATABASE_URL
-        fromDatabase:
-          name: dutchkem-postgres
-          property: connectionString
+        value: sqlite:///./dutchkem.db
       - key: MONGODB_URL
         value: mongodb://localhost:27017/dutchkem_voice
       - key: REDIS_URL
