@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Dutchkem Voice Agent</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FECA57 100%);
+            min-height: 100vh;
+            color: #1A1A2E;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        header p { color: #666; margin-top: 0.5rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: #FF6B6B;
+        }
+        .stat {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .badge-sunset { background: linear-gradient(135deg, #FF6B6B, #FF8E53); color: white; }
+        .badge-mint { background: linear-gradient(135deg, #55EFC4, #81ECEC); color: #1A1A2E; }
+        .badge-yellow { background: linear-gradient(135deg, #FECA57, #FF8E53); color: #1A1A2E; }
+        .table-wrapper { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            font-weight: 600;
+            color: #FF8E53;
+        }
+        tr:hover { background: rgba(255, 107, 107, 0.05); }
+        .status-ok { color: #55EFC4; font-weight: 600; }
+        .status-warn { color: #FECA57; font-weight: 600; }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <p>Dutchkem Voice Agent v3.0.0 &mdash; System Overview</p>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <h3>System Status</h3>
+                <div class="stat">Online</div>
+                <div class="stat-label">All services running</div>
+            </div>
+            <div class="card">
+                <h3>Active Modes</h3>
+                <div class="stat">9</div>
+                <div class="stat-label">Interview, Sales, Coaching...</div>
+            </div>
+            <div class="card">
+                <h3>API Endpoints</h3>
+                <div class="stat">5+</div>
+                <div class="stat-label">Routers registered</div>
+            </div>
+            <div class="card">
+                <h3>Version</h3>
+                <div class="stat">3.0.0</div>
+                <div class="stat-label">Current release</div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+            <h3>Service Health</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Database (PostgreSQL)</td>
+                            <td class="status-ok">Connected</td>
+                            <td><span class="badge badge-sunset">Primary</span></td>
+                        </tr>
+                        <tr>
+                            <td>Redis</td>
+                            <td class="status-ok">Connected</td>
+                            <td><span class="badge badge-mint">Cache</span></td>
+                        </tr>
+                        <tr>
+                            <td>MongoDB</td>
+                            <td class="status-ok">Connected</td>
+                            <td><span class="badge badge-yellow">Documents</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+            <h3>Available Modes</h3>
+            <div style="margin-top: 0.75rem;">
+                <span class="badge badge-sunset">Interview</span>
+                <span class="badge badge-sunset">Client Meeting</span>
+                <span class="badge badge-mint">Mentoring</span>
+                <span class="badge badge-mint">Performance Review</span>
+                <span class="badge badge-yellow">Board Presentation</span>
+                <span class="badge badge-yellow">Sales</span>
+                <span class="badge badge-sunset">Training</span>
+                <span class="badge badge-mint">Internal Comms</span>
+                <span class="badge badge-yellow">Customer Support</span>
+            </div>
+        </div>
+
+        <footer>
+            Dutchkem Ventures &copy; 2026 &mdash; Colourful Admin Panel
+        </footer>
+    </div>
+</body>
+</html>
