@@ -58,3 +58,5 @@ models/
 uploads/voice/
 .hive/
 .hive2/
+
+.vercel

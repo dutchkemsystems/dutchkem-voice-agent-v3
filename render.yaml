@@ -10,19 +10,12 @@ services:
     databaseName: dutchkem_voice
     ipAllowList: []  # only internal
 
-  # ── Redis ──────────────────────────────────────────────
-  - name: dutchkem-redis
-    type: redis
-    plan: free
-    ipAllowList: []  # only internal
-    maxmemoryPolicy: allkeys-lru
-
   # ── Backend API ────────────────────────────────────────
   - name: dutchkem-backend
     type: web
     plan: free
     runtime: python
-    buildCommand: pip install -r requirements/base.txt
+    buildCommand: pip install -r requirements/production.txt
     startCommand: gunicorn config.app:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT --access-logfile - --error-logfile -
     envVars:
       - key: DEBUG
@@ -38,22 +31,8 @@ services:
       - key: MONGODB_URL
         value: mongodb://localhost:27017/dutchkem_voice
       - key: REDIS_URL
-        fromDatabase:
-          name: dutchkem-redis
-          property: connectionString
+        value: rediss://default:gQAAAAAAAtmpAAIgcDFkNzI0YWJmNzI5ZDY0ZmJjODU4ZTVkNDNiNWM2N2QyYQ@hip-walrus-186793.upstash.io:6379
       - key: CORS_ORIGINS
-        value: '["http://localhost:3000"]'
+        value: '["https://dutchkem-frontend.vercel.app"]'
     healthCheckPath: /health
-    autoDeploy: true
-
-  # ── Frontend Web ───────────────────────────────────────
-  - name: dutchkem-frontend
-    type: web
-    plan: free
-    runtime: node
-    buildCommand: cd frontend/web && pnpm install && pnpm build
-    startCommand: cd frontend/web && pnpm start
-    envVars:
-      - key: NEXT_PUBLIC_API_URL
-        value: http://dutchkem-backend:8000
     autoDeploy: true
