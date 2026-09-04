@@ -1,0 +1,87 @@
+/* Floating Particle Animations (CSS-only, no framer-motion) */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-40px) scale(1.1); }
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.floating-particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: float 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.particle-1 {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, var(--sunset-red), transparent);
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.particle-2 {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, var(--sunshine-yellow), transparent);
+  top: 60%;
+  right: 10%;
+  animation-delay: 2s;
+}
+
+.particle-3 {
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, var(--mint-green), transparent);
+  bottom: 20%;
+  left: 15%;
+  animation-delay: 4s;
+}
+
+.particle-4 {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, var(--sky-blue), transparent);
+  top: 30%;
+  right: 25%;
+  animation-delay: 1s;
+}
+
+.particle-5 {
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle, var(--sunset-orange), transparent);
+  bottom: 40%;
+  left: 35%;
+  animation-delay: 3s;
+}
+
+.animate-gradient-slow {
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+}

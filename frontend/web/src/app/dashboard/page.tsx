@@ -5,6 +5,8 @@ import { api, User } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { GradientHeader } from "@/components/ColourfulComponents/GradientHeader";
+import { Mic, Shield, UserCheck } from "lucide-react";
 
 interface Stats {
   voiceProfiles: number;
@@ -31,12 +33,10 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome back{user ? `, ${user.username}` : ""}. Here&apos;s an overview of your account.
-        </p>
-      </div>
+      <GradientHeader
+        title="Dashboard"
+        subtitle={`Welcome back${user ? `, ${user.username}` : ""}. Here's an overview of your account.`}
+      />
 
       {error && (
         <Alert variant="destructive">
@@ -45,77 +45,77 @@ export default function DashboardPage() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
+        <Card className="border-[#FF6B6B]/20 hover:shadow-lg transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Voice Profiles</CardTitle>
-            <span className="text-2xl">🎙️</span>
+            <Mic className="h-6 w-6 text-[#FF6B6B]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.voiceProfiles}</div>
+            <div className="text-2xl font-bold text-[#FF6B6B]">{stats.voiceProfiles}</div>
             <CardDescription>Cloned voice profiles</CardDescription>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-[#FF8E53]/20 hover:shadow-lg transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Interviews</CardTitle>
-            <span className="text-2xl">🎤</span>
+            <UserCheck className="h-6 w-6 text-[#FF8E53]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.interviewsCompleted}</div>
+            <div className="text-2xl font-bold text-[#FF8E53]">{stats.interviewsCompleted}</div>
             <CardDescription>Completed interview sessions</CardDescription>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-[#55EFC4]/20 hover:shadow-lg transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Detections</CardTitle>
-            <span className="text-2xl">🛡️</span>
+            <Shield className="h-6 w-6 text-[#55EFC4]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.deepfakeDetections}</div>
+            <div className="text-2xl font-bold text-[#55EFC4]">{stats.deepfakeDetections}</div>
             <CardDescription>Deepfake detections performed</CardDescription>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
+      <Card variant="glass">
         <CardHeader>
-          <CardTitle>Account Status</CardTitle>
+          <CardTitle className="text-gradient-sunset">Account Status</CardTitle>
           <CardDescription>Your account and service status</CardDescription>
         </CardHeader>
         <CardContent>
           {user ? (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Email</span>
+                <span className="text-sm text-[#6c757d]">Email</span>
                 <span className="text-sm font-medium">{user.email}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Username</span>
+                <span className="text-sm text-[#6c757d]">Username</span>
                 <span className="text-sm font-medium">{user.username}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Status</span>
-                <Badge variant={user.is_active ? "default" : "destructive"}>
+                <span className="text-sm text-[#6c757d]">Status</span>
+                <Badge variant={user.is_active ? "sunset" : "destructive"}>
                   {user.is_active ? "Active" : "Inactive"}
                 </Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Voice Profile</span>
-                <Badge variant={user.voice_profile_id ? "default" : "secondary"}>
+                <span className="text-sm text-[#6c757d]">Voice Profile</span>
+                <Badge variant={user.voice_profile_id ? "ocean" : "secondary"}>
                   {user.voice_profile_id ? "Registered" : "Not Set"}
                 </Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Face Registration</span>
-                <Badge variant={user.face_embedding ? "default" : "secondary"}>
+                <span className="text-sm text-[#6c757d]">Face Registration</span>
+                <Badge variant={user.face_embedding ? "tropical" : "secondary"}>
                   {user.face_embedding ? "Registered" : "Not Set"}
                 </Badge>
               </div>
             </div>
           ) : (
-            <div className="text-sm text-muted-foreground">Loading account info...</div>
+            <div className="text-sm text-[#6c757d]">Loading account info...</div>
           )}
         </CardContent>
       </Card>

@@ -1,0 +1,34 @@
+/* Gradient Utility Classes */
+.bg-gradient-sunset {
+  background: linear-gradient(135deg, var(--sunset-red), var(--sunset-orange), var(--sunshine-yellow));
+}
+
+.bg-gradient-ocean {
+  background: linear-gradient(135deg, var(--mint-green), var(--sky-blue));
+}
+
+.bg-gradient-tropical {
+  background: linear-gradient(135deg, var(--sunset-red), var(--sunshine-yellow), var(--mint-green));
+}
+
+.text-gradient-sunset {
+  background: linear-gradient(135deg, var(--sunset-red), var(--sunset-orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-ocean {
+  background: linear-gradient(135deg, var(--mint-green), var(--sky-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-gradient-sunset {
+  border-image: linear-gradient(135deg, var(--sunset-red), var(--sunset-orange)) 1;
+}
+
+.border-gradient-ocean {
+  border-image: linear-gradient(135deg, var(--mint-green), var(--sky-blue)) 1;
+}

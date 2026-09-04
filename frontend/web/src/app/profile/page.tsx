@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { GradientHeader } from "@/components/ColourfulComponents/GradientHeader";
+import { Mic, Camera } from "lucide-react";
 
 export default function ProfilePage() {
   const [voiceFile, setVoiceFile] = useState<File | null>(null);
@@ -51,16 +53,13 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-        <p className="text-muted-foreground">Manage your voice clone and face registration.</p>
-      </div>
+      <GradientHeader title="Profile" subtitle="Manage your voice clone and face registration." />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card variant="glass">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <span>🎙️</span> Voice Clone
+            <CardTitle className="flex items-center gap-2 text-[#FF6B6B]">
+              <Mic className="h-5 w-5" /> Voice Clone
             </CardTitle>
             <CardDescription>
               Upload a short audio sample (5-30 seconds) to create a voice profile.
@@ -76,7 +75,7 @@ export default function ProfilePage() {
                 accept="audio/*"
                 onChange={(e) => setVoiceFile(e.target.files?.[0] || null)}
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-[#6c757d]">
                 Supported: WAV, MP3, FLAC. Best results with clean speech.
               </p>
             </div>
@@ -85,16 +84,16 @@ export default function ProfilePage() {
                 <AlertDescription>{voiceStatus}</AlertDescription>
               </Alert>
             )}
-            <Button onClick={handleVoiceClone} disabled={!voiceFile || loading === "voice"} className="w-full">
+            <Button variant="sunset" onClick={handleVoiceClone} disabled={!voiceFile || loading === "voice"} className="w-full">
               {loading === "voice" ? "Creating Profile..." : "Create Voice Profile"}
             </Button>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card variant="glass">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <span>📸</span> Face Registration
+            <CardTitle className="flex items-center gap-2 text-[#81ECEC]">
+              <Camera className="h-5 w-5" /> Face Registration
             </CardTitle>
             <CardDescription>
               Upload a clear photo of your face for identity verification.
@@ -110,7 +109,7 @@ export default function ProfilePage() {
                 accept="image/*"
                 onChange={(e) => setFaceFile(e.target.files?.[0] || null)}
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-[#6c757d]">
                 Supported: JPG, PNG. Face should be clearly visible and front-facing.
               </p>
             </div>
@@ -119,7 +118,7 @@ export default function ProfilePage() {
                 <AlertDescription>{faceStatus}</AlertDescription>
               </Alert>
             )}
-            <Button onClick={handleFaceRegister} disabled={!faceFile || loading === "face"} className="w-full">
+            <Button variant="ocean" onClick={handleFaceRegister} disabled={!faceFile || loading === "face"} className="w-full">
               {loading === "face" ? "Registering..." : "Register Face"}
             </Button>
           </CardContent>
