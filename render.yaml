@@ -1,0 +1,59 @@
+# Render Blueprint — dutchkem-voice-agent-v3
+# Auto-deploys from GitHub on push to master
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  # ── PostgreSQL ──────────────────────────────────────────
+  - name: dutchkem-postgres
+    type: postgresql
+    plan: free
+    databaseName: dutchkem_voice
+    ipAllowList: []  # only internal
+
+  # ── Redis ──────────────────────────────────────────────
+  - name: dutchkem-redis
+    type: redis
+    plan: free
+    ipAllowList: []  # only internal
+    maxmemoryPolicy: allkeys-lru
+
+  # ── Backend API ────────────────────────────────────────
+  - name: dutchkem-backend
+    type: web
+    plan: free
+    runtime: python
+    buildCommand: pip install -r requirements/base.txt
+    startCommand: gunicorn config.app:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT --access-logfile - --error-logfile -
+    envVars:
+      - key: DEBUG
+        value: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dutchkem-postgres
+          property: connectionString
+      - key: MONGODB_URL
+        value: mongodb://localhost:27017/dutchkem_voice
+      - key: REDIS_URL
+        fromDatabase:
+          name: dutchkem-redis
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: '["http://localhost:3000"]'
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # ── Frontend Web ───────────────────────────────────────
+  - name: dutchkem-frontend
+    type: web
+    plan: free
+    runtime: node
+    buildCommand: cd frontend/web && pnpm install && pnpm build
+    startCommand: cd frontend/web && pnpm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: http://dutchkem-backend:8000
+    autoDeploy: true

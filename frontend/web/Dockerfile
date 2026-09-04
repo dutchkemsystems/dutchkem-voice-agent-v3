@@ -12,6 +12,9 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY . .
 
-EXPOSE 3000
+# Build for production
+RUN pnpm build
 
-CMD ["pnpm", "dev"]
+# Production: use next start
+EXPOSE 3000
+CMD ["pnpm", "start"]
