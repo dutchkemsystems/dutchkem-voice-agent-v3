@@ -20,6 +20,15 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
 
   const response = await fetch(url, { ...options, headers });
 
+  if (response.status === 401 || response.status === 403) {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("currentMode");
+      window.location.href = "/login";
+    }
+    throw new Error("Session expired. Please log in again.");
+  }
+
   if (!response.ok) {
     let errorData: ApiError;
     try {
@@ -48,12 +57,15 @@ export interface User {
 
 export interface TokenResponse {
   access_token: string;
-  token_type: string;
+  refresh_token: string;
 }
 
 export interface VoiceProfile {
-  id: string;
+  profile_id: string;
+  user_id: string;
   name: string;
+  reference_audio_path: string;
+  embedding?: number[];
   created_at: string;
 }
 
@@ -76,6 +88,19 @@ export interface ModeInfo {
   default_view: string;
 }
 
+export interface DashboardStats {
+  voice_profiles: number;
+  face_registrations: number;
+  interviews_completed: number;
+  deepfake_detections: number;
+}
+
+export interface DeepfakeDetectionResult {
+  is_deepfake: boolean;
+  confidence: number;
+  details: Record<string, unknown>;
+}
+
 export const api = {
   auth: {
     login: (email: string, password: string) =>
@@ -89,41 +114,54 @@ export const api = {
         body: JSON.stringify(data),
       }),
     me: () => request<User>(`${API_BASE}/auth/me`),
+    refresh: (refreshToken: string) =>
+      request<{ access_token: string }>(`${API_BASE}/auth/refresh`, {
+        method: "POST",
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      }),
   },
   voice: {
-    clone: (audioFile: File) => {
+    clone: (audioFile: File, userId?: string, name?: string) => {
       const formData = new FormData();
       formData.append("audio", audioFile);
-      return request<VoiceProfile>(`${API_BASE}/voice/clone`, {
+      if (userId) formData.append("user_id", userId);
+      if (name) formData.append("name", name);
+      return request<{ profile_id: string }>(`${API_BASE}/voice/clone`, {
         method: "POST",
         body: formData,
       });
     },
-    synthesize: (text: string, voiceId: string) =>
-      fetch(`${API_BASE}/voice/synthesize`, {
+    synthesize: (text: string, profileId: string, exaggeration?: number) =>
+      request<{ audio_base64: string }>(`${API_BASE}/voice/synthesize`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, voice_id: voiceId }),
-      }).then((r) => r.blob()),
-    profiles: () => request<VoiceProfile[]>(`${API_BASE}/voice/profiles`),
+        body: JSON.stringify({ text, profile_id: profileId, exaggeration: exaggeration ?? 0.5 }),
+      }),
+    profiles: (userId?: string) => {
+      const params = userId ? `?user_id=${userId}` : "";
+      return request<{ profiles: VoiceProfile[] }>(`${API_BASE}/voice/profiles${params}`);
+    },
+    tts: (text: string, voice?: string) =>
+      request<{ audio_base64: string; duration_ms: number }>(`${API_BASE}/voice/tts`, {
+        method: "POST",
+        body: JSON.stringify({ text, voice: voice ?? "default" }),
+      }),
   },
   proctoring: {
-    registerFace: (imageFile: File) => {
-      const formData = new FormData();
-      formData.append("image", imageFile);
-      return request<{ status: string }>(`${API_BASE}/proctoring/register-face`, {
+    registerFace: (profile: { user_id: string; photo_path: string }) =>
+      request<{ user_id: string; message: string; embedding_stored: boolean }>(
+        `${API_BASE}/proctoring/register-face`,
+        { method: "POST", body: JSON.stringify(profile) }
+      ),
+    verify: (userId: string) =>
+      request<{ verified: boolean; confidence: number }>(`${API_BASE}/proctoring/verify`, {
         method: "POST",
-        body: formData,
-      });
-    },
-    verify: (imageFile: File) => {
-      const formData = new FormData();
-      formData.append("image", imageFile);
-      return request<{ verified: boolean; confidence: number }>(
-        `${API_BASE}/proctoring/verify`,
-        { method: "POST", body: formData }
-      );
-    },
+        body: JSON.stringify({ user_id: userId }),
+      }),
+    liveness: (userId: string) =>
+      request<{ is_live: boolean; confidence: number; blink_detected: boolean; head_movement: boolean }>(
+        `${API_BASE}/proctoring/liveness`,
+        { method: "POST", body: JSON.stringify({ user_id: userId }) }
+      ),
   },
   interview: {
     start: () =>
@@ -148,5 +186,67 @@ export const api = {
           body: JSON.stringify({ mode_id: modeId, context }),
         }
       ),
+  },
+  deepfake: {
+    detectVoice: (audioFile: File) => {
+      const formData = new FormData();
+      formData.append("audio", audioFile);
+      return request<DeepfakeDetectionResult>(`${API_BASE}/deepfake/detect/voice`, {
+        method: "POST",
+        body: formData,
+      });
+    },
+    detectVideo: (videoFile: File) => {
+      const formData = new FormData();
+      formData.append("video", videoFile);
+      return request<DeepfakeDetectionResult>(`${API_BASE}/deepfake/detect/video`, {
+        method: "POST",
+        body: formData,
+      });
+    },
+    detectCombined: (audioFile: File, videoFile: File) => {
+      const formData = new FormData();
+      formData.append("audio", audioFile);
+      formData.append("video", videoFile);
+      return request<DeepfakeDetectionResult>(`${API_BASE}/deepfake/detect/combined`, {
+        method: "POST",
+        body: formData,
+      });
+    },
+  },
+  analytics: {
+    dashboard: () => request<DashboardStats>(`${API_BASE}/analytics/dashboard`),
+    skillGaps: (scores: { category: string; overall: number }[]) =>
+      request<{ category: string; current_score: number; target_score: number; gap: number; recommendations: string[] }[]>(
+        `${API_BASE}/analytics/skill-gaps`,
+        { method: "POST", body: JSON.stringify({ scores }) }
+      ),
+    performance: (sessionScores: { category: string; overall: number }[][]) =>
+      request<{ total_sessions: number; average_score: number; improvement_rate: number; strongest_category: string; weakest_category: string }>(
+        `${API_BASE}/analytics/performance`,
+        { method: "POST", body: JSON.stringify({ session_scores: sessionScores }) }
+      ),
+  },
+  scoring: {
+    score: (data: { question: string; answer: string; category?: string }) =>
+      request<{ confidence: number; clarity: number; relevance: number; response_time: number; overall: number; category: string }>(
+        `${API_BASE}/scoring/score`,
+        { method: "POST", body: JSON.stringify(data) }
+      ),
+    sessionSummary: () =>
+      request<{ total_scored: number; average_confidence: number; average_clarity: number; average_relevance: number }>(
+        `${API_BASE}/scoring/session/summary`
+      ),
+  },
+  orchestrator: {
+    generate: (data: { question: string; question_type?: string; candidate_profile?: Record<string, unknown> }) =>
+      request<{ answer: string }>(`${API_BASE}/orchestrator/generate`, {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+  },
+  health: {
+    check: () =>
+      request<{ status: string; version: string; services: Record<string, string> }>(`${API_BASE}/health`),
   },
 };

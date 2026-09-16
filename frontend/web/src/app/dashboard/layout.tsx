@@ -5,12 +5,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { api, ModeInfo } from "@/lib/api";
-import { LayoutDashboard, User, Mic, LogOut } from "lucide-react";
+import { LayoutDashboard, User, Mic, Shield, LogOut } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/profile", label: "Profile", icon: User },
   { href: "/interview", label: "Interview", icon: Mic },
+  { href: "/deepfake", label: "Deepfake Detection", icon: Shield },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

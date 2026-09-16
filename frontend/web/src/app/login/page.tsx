@@ -25,6 +25,9 @@ export default function LoginPage() {
     try {
       const result = await api.auth.login(email, password);
       localStorage.setItem("token", result.access_token);
+      if (result.refresh_token) {
+        localStorage.setItem("refresh_token", result.refresh_token);
+      }
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");

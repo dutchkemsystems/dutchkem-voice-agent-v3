@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 
 
 # --- Model Tests ---
@@ -185,26 +185,58 @@ class TestLivenessDetector:
 
 @pytest.mark.asyncio
 async def test_register_face_endpoint(client):
-    response = await client.post(
-        "/proctoring/register-face",
-        json={"user_id": "user-123", "photo_path": "/tmp/face.jpg"},
-    )
-    assert response.status_code == 200
-    data = response.json()
-    assert "message" in data
-    assert "user_id" in data
+    from config.app import app
+    from config.database import get_db
+
+    mock_db = AsyncMock()
+    mock_result = MagicMock()
+    mock_result.scalars.return_value.first.return_value = None
+    mock_db.execute.return_value = mock_result
+
+    async def override_get_db():
+        yield mock_db
+
+    app.dependency_overrides[get_db] = override_get_db
+    try:
+        response = await client.post(
+            "/proctoring/register-face",
+            json={"user_id": "user-123", "photo_path": "/tmp/face.jpg"},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "message" in data
+        assert "user_id" in data
+    finally:
+        app.dependency_overrides.clear()
 
 
 @pytest.mark.asyncio
 async def test_verify_face_endpoint(client):
-    response = await client.post(
-        "/proctoring/verify",
-        json={"user_id": "user-123", "image_data": "base64data"},
-    )
-    assert response.status_code == 200
-    data = response.json()
-    assert "verified" in data
-    assert "confidence" in data
+    from config.app import app
+    from config.database import get_db
+
+    mock_db = AsyncMock()
+    mock_face = MagicMock()
+    mock_face.user_id = "user-123"
+    mock_result = MagicMock()
+    mock_result.scalars.return_value.first.return_value = mock_face
+    mock_db.execute.return_value = mock_result
+
+    async def override_get_db():
+        yield mock_db
+
+    app.dependency_overrides[get_db] = override_get_db
+    try:
+        response = await client.post(
+            "/proctoring/verify",
+            json={"user_id": "user-123", "image_data": "base64data"},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "verified" in data
+        assert "confidence" in data
+    finally:
+        app.dependency_overrides.clear()
 
 
 @pytest.mark.asyncio

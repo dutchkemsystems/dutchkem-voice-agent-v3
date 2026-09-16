@@ -1,34 +1,37 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api, User } from "@/lib/api";
+import { api, User, DashboardStats } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { GradientHeader } from "@/components/ColourfulComponents/GradientHeader";
 import { Mic, Shield, UserCheck } from "lucide-react";
 
-interface Stats {
-  voiceProfiles: number;
-  interviewsCompleted: number;
-  deepfakeDetections: number;
-}
-
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
-  const [stats] = useState<Stats>({ voiceProfiles: 0, interviewsCompleted: 0, deepfakeDetections: 0 });
+  const [stats, setStats] = useState<DashboardStats>({
+    voice_profiles: 0,
+    face_registrations: 0,
+    interviews_completed: 0,
+    deepfake_detections: 0,
+  });
   const [error, setError] = useState("");
 
   useEffect(() => {
-    async function loadUser() {
+    async function loadDashboard() {
       try {
-        const data = await api.auth.me();
-        setUser(data);
+        const [userData, statsData] = await Promise.all([
+          api.auth.me(),
+          api.analytics.dashboard(),
+        ]);
+        setUser(userData);
+        setStats(statsData);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load user");
+        setError(err instanceof Error ? err.message : "Failed to load dashboard");
       }
     }
-    loadUser();
+    loadDashboard();
   }, []);
 
   return (
@@ -51,30 +54,30 @@ export default function DashboardPage() {
             <Mic className="h-6 w-6 text-[#FF6B6B]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-[#FF6B6B]">{stats.voiceProfiles}</div>
+            <div className="text-2xl font-bold text-[#FF6B6B]">{stats.voice_profiles}</div>
             <CardDescription>Cloned voice profiles</CardDescription>
           </CardContent>
         </Card>
 
         <Card className="border-[#FF8E53]/20 hover:shadow-lg transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Interviews</CardTitle>
+            <CardTitle className="text-sm font-medium">Face Registrations</CardTitle>
             <UserCheck className="h-6 w-6 text-[#FF8E53]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-[#FF8E53]">{stats.interviewsCompleted}</div>
-            <CardDescription>Completed interview sessions</CardDescription>
+            <div className="text-2xl font-bold text-[#FF8E53]">{stats.face_registrations}</div>
+            <CardDescription>Registered face profiles</CardDescription>
           </CardContent>
         </Card>
 
         <Card className="border-[#55EFC4]/20 hover:shadow-lg transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Detections</CardTitle>
+            <CardTitle className="text-sm font-medium">Interviews</CardTitle>
             <Shield className="h-6 w-6 text-[#55EFC4]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-[#55EFC4]">{stats.deepfakeDetections}</div>
-            <CardDescription>Deepfake detections performed</CardDescription>
+            <div className="text-2xl font-bold text-[#55EFC4]">{stats.interviews_completed}</div>
+            <CardDescription>Completed interview sessions</CardDescription>
           </CardContent>
         </Card>
       </div>

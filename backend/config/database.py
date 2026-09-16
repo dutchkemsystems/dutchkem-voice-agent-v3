@@ -8,6 +8,7 @@ import os
 class Base(DeclarativeBase):
     pass
 
+
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://dutchkem:password@localhost:5432/dutchkem_voice")
 MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
@@ -23,9 +24,42 @@ mongodb = mongo_client.dutchkem_voice
 # Redis
 redis_client = aioredis.from_url(REDIS_URL, decode_responses=True)
 
+
 async def get_db():
     async with async_session() as session:
         yield session
 
+
 async def get_redis():
     return redis_client
+
+
+async def init_db():
+    """Create all tables defined by models that import Base."""
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+
+async def check_db_health() -> bool:
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(__import__("sqlalchemy").text("SELECT 1"))
+        return True
+    except Exception:
+        return False
+
+
+async def check_redis_health() -> bool:
+    try:
+        await redis_client.ping()
+        return True
+    except Exception:
+        return False
+
+
+async def check_mongodb_health() -> bool:
+    try:
+        await mongo_client.admin.command("ping")
+        return True
+    except Exception:
+        return False

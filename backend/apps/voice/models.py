@@ -1,14 +1,9 @@
-from sqlalchemy import Column, String, Float, DateTime, Integer, Text
+from sqlalchemy import Column, String, Float, DateTime, Text
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from datetime import datetime, timezone
 import uuid
 
-from config.database import engine
-from sqlalchemy.orm import DeclarativeBase
-
-
-class Base(DeclarativeBase):
-    pass
+from config.database import Base
 
 
 class VoiceProfile(Base):

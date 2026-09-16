@@ -4,6 +4,12 @@ import logging
 from datetime import datetime, timezone
 from typing import Optional
 
+from sqlalchemy import select, delete
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from config.database import async_session
+from apps.voice.models import VoiceProfile
+
 logger = logging.getLogger(__name__)
 
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "..", "uploads", "voice")
@@ -11,13 +17,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 class VoiceService:
-    """Voice cloning service that manages profiles and synthesis.
-
-    In-memory profile storage for now; database integration in follow-up tasks.
-    """
-
-    def __init__(self):
-        self._profiles: dict[str, dict] = {}
+    """Voice cloning service with PostgreSQL-backed profile storage."""
 
     async def create_profile(
         self,
@@ -32,26 +32,45 @@ class VoiceService:
         with open(audio_path, "wb") as f:
             f.write(audio_data)
 
-        profile = {
-            "profile_id": profile_id,
-            "user_id": user_id,
-            "name": name,
-            "reference_audio_path": audio_path,
-            "embedding": None,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        }
-        self._profiles[profile_id] = profile
+        async with async_session() as db:
+            profile = VoiceProfile(
+                id=uuid.UUID(profile_id),
+                user_id=uuid.UUID(user_id) if len(user_id) == 36 else user_id,
+                name=name,
+                reference_audio_path=audio_path,
+            )
+            db.add(profile)
+            await db.commit()
+
         logger.info("Created voice profile %s for user %s", profile_id, user_id)
         return profile_id
 
     async def get_profile(self, profile_id: str) -> Optional[dict]:
-        return self._profiles.get(profile_id)
+        async with async_session() as db:
+            result = await db.execute(
+                select(VoiceProfile).where(VoiceProfile.id == profile_id)
+            )
+            profile = result.scalars().first()
+            if profile:
+                return profile.to_dict()
+        return None
 
     async def list_profiles(self, user_id: Optional[str] = None) -> list[dict]:
-        profiles = list(self._profiles.values())
-        if user_id:
-            profiles = [p for p in profiles if p["user_id"] == user_id]
-        return profiles
+        async with async_session() as db:
+            query = select(VoiceProfile)
+            if user_id:
+                query = query.where(VoiceProfile.user_id == user_id)
+            result = await db.execute(query)
+            profiles = result.scalars().all()
+            return [p.to_dict() for p in profiles]
+
+    async def delete_profile(self, profile_id: str) -> bool:
+        async with async_session() as db:
+            result = await db.execute(
+                delete(VoiceProfile).where(VoiceProfile.id == profile_id)
+            )
+            await db.commit()
+            return result.rowcount > 0
 
     async def synthesize(
         self,
@@ -59,7 +78,7 @@ class VoiceService:
         profile_id: str,
         exaggeration: float = 0.5,
     ) -> bytes:
-        profile = self._profiles.get(profile_id)
+        profile = await self.get_profile(profile_id)
         if not profile:
             raise ValueError(f"Voice profile {profile_id} not found")
 

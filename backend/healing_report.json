@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-09-16T18:52:34.307232",
+  "summary": {
+    "total": 19,
+    "passed": 19,
+    "failed": 0,
+    "fixes_applied": 0,
+    "fixes_failed": 0
+  },
+  "critical_issues": [],
+  "results": [
+    {
+      "check": "Python Version",
+      "passed": true,
+      "severity": "info",
+      "message": "Python 3.14.2 OK",
+      "fix_available": false
+    },
+    {
+      "check": "Required Packages",
+      "passed": true,
+      "severity": "info",
+      "message": "All required packages installed",
+      "fix_available": false
+    },
+    {
+      "check": "Module Imports",
+      "passed": true,
+      "severity": "info",
+      "message": "All modules import successfully",
+      "fix_available": false
+    },
+    {
+      "check": "Config Settings",
+      "passed": true,
+      "severity": "info",
+      "message": "Settings OK",
+      "fix_available": true
+    },
+    {
+      "check": "Database Config",
+      "passed": true,
+      "severity": "info",
+      "message": "Database URL configured: postgresql+asyncpg://dutchkem:...",
+      "fix_available": false
+    },
+    {
+      "check": "Redis Config",
+      "passed": true,
+      "severity": "info",
+      "message": "Redis URL: redis://localhost:6379...",
+      "fix_available": false
+    },
+    {
+      "check": "MongoDB Config",
+      "passed": true,
+      "severity": "info",
+      "message": "MongoDB URL: mongodb://localhost:27017...",
+      "fix_available": false
+    },
+    {
+      "check": "Models Registration",
+      "passed": true,
+      "severity": "info",
+      "message": "Registered tables: ['users', 'face_profiles', 'voice_profiles']",
+      "fix_available": false
+    },
+    {
+      "check": "Routers Wired",
+      "passed": true,
+      "severity": "info",
+      "message": "44 routes registered",
+      "fix_available": false
+    },
+    {
+      "check": "Critical API Endpoints",
+      "passed": true,
+      "severity": "info",
+      "message": "All critical endpoints present",
+      "fix_available": false
+    },
+    {
+      "check": "Auth System",
+      "passed": true,
+      "severity": "info",
+      "message": "Auth system functional (hash, verify, JWT create/decode)",
+      "fix_available": false
+    },
+    {
+      "check": "Voice Service",
+      "passed": true,
+      "severity": "info",
+      "message": "Voice service has all required methods",
+      "fix_available": false
+    },
+    {
+      "check": "Proctoring Service",
+      "passed": true,
+      "severity": "info",
+      "message": "Proctoring services functional",
+      "fix_available": false
+    },
+    {
+      "check": "Deepfake Detector",
+      "passed": true,
+      "severity": "info",
+      "message": "Deepfake detector functional",
+      "fix_available": false
+    },
+    {
+      "check": "Health Endpoint",
+      "passed": true,
+      "severity": "info",
+      "message": "Health endpoint registered",
+      "fix_available": false
+    },
+    {
+      "check": "File Structure",
+      "passed": true,
+      "severity": "info",
+      "message": "All required files present",
+      "fix_available": false
+    },
+    {
+      "check": "Requirements Files",
+      "passed": true,
+      "severity": "info",
+      "message": "Requirements files OK",
+      "fix_available": false
+    },
+    {
+      "check": "Docker Config",
+      "passed": true,
+      "severity": "info",
+      "message": "Docker configs present",
+      "fix_available": false
+    },
+    {
+      "check": "Environment Files",
+      "passed": true,
+      "severity": "info",
+      "message": "Env templates present",
+      "fix_available": false
+    }
+  ]
+}
