@@ -21,7 +21,9 @@ services:
       - key: MONGODB_URL
         value: mongodb://localhost:27017/dutchkem_voice
       - key: REDIS_URL
-        value: rediss://default:gQAAAAAAAtmpAAIgcDFkNzI0YWJmNzI5ZDY0ZmJjODU4ZTVkNDNiNWM2N2QyYQ@hip-walrus-186793.upstash.io:6379
+        value: rediss://default:YOUR_REDIS_PASSWORD@YOUR_REDIS_HOST:6379
+      - key: ENCRYPTION_KEY
+        generateValue: true
       - key: CORS_ORIGINS
         value: '["https://dutchkem-frontend.vercel.app"]'
     healthCheckPath: /health

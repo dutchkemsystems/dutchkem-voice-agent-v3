@@ -1,0 +1,3278 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Dutchkem Voice Agent",
+    "version": "3.0.0"
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Register",
+        "operationId": "register_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegister"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "operationId": "login_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Refresh Token",
+        "operationId": "refresh_token_auth_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRefreshRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get Me",
+        "operationId": "get_me_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/proctoring/register-face": {
+      "post": {
+        "tags": [
+          "proctoring"
+        ],
+        "summary": "Register Face",
+        "description": "Register a face profile for a user.",
+        "operationId": "register_face_proctoring_register_face_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FaceProfileCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FaceProfileResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proctoring/verify": {
+      "post": {
+        "tags": [
+          "proctoring"
+        ],
+        "summary": "Verify Face",
+        "description": "Verify if an image matches a registered face.",
+        "operationId": "verify_face_proctoring_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FaceVerifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FaceVerifyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proctoring/liveness": {
+      "post": {
+        "tags": [
+          "proctoring"
+        ],
+        "summary": "Check Liveness",
+        "description": "Perform liveness detection on an image.",
+        "operationId": "check_liveness_proctoring_liveness_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LivenessRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LivenessResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/clone": {
+      "post": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Clone Voice",
+        "operationId": "clone_voice_voice_clone_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_clone_voice_voice_clone_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/synthesize": {
+      "post": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Synthesize Voice",
+        "operationId": "synthesize_voice_voice_synthesize_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SynthesizeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SynthesizeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/profiles": {
+      "get": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "List Profiles",
+        "operationId": "list_profiles_voice_profiles_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListProfilesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/tts": {
+      "post": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Text To Speech",
+        "description": "Convert text to speech with accent/dialect support.",
+        "operationId": "text_to_speech_voice_tts_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TTSRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TTSResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/tts/stream": {
+      "post": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Text To Speech Stream",
+        "description": "Stream text to speech audio chunks.",
+        "operationId": "text_to_speech_stream_voice_tts_stream_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TTSStreamRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coaching/tip": {
+      "post": {
+        "tags": [
+          "coaching"
+        ],
+        "summary": "Get Realtime Tip",
+        "description": "Get a real-time coaching tip based on current performance.",
+        "operationId": "get_realtime_tip_coaching_tip_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apps__coaching__router__ScoreRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TipResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coaching/feedback": {
+      "post": {
+        "tags": [
+          "coaching"
+        ],
+        "summary": "Get Feedback",
+        "description": "Generate comprehensive post-interview feedback.",
+        "operationId": "get_feedback_coaching_feedback_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coaching/session/start": {
+      "post": {
+        "tags": [
+          "coaching"
+        ],
+        "summary": "Start Session",
+        "description": "Start a new coaching session.",
+        "operationId": "start_session_coaching_session_start_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionStartResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coaching/session/score": {
+      "post": {
+        "tags": [
+          "coaching"
+        ],
+        "summary": "Record Session Score",
+        "description": "Record a score in an active coaching session.",
+        "operationId": "record_session_score_coaching_session_score_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionScoreRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coaching/session/end": {
+      "post": {
+        "tags": [
+          "coaching"
+        ],
+        "summary": "End Session",
+        "description": "End a coaching session and get final feedback.",
+        "operationId": "end_session_coaching_session_end_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionEndRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/modes/": {
+      "get": {
+        "tags": [
+          "modes"
+        ],
+        "summary": "List Modes",
+        "description": "List all available modes.",
+        "operationId": "list_modes_api_modes__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/modes/{mode_id}": {
+      "get": {
+        "tags": [
+          "modes"
+        ],
+        "summary": "Get Mode",
+        "description": "Get a specific mode.",
+        "operationId": "get_mode_api_modes__mode_id__get",
+        "parameters": [
+          {
+            "name": "mode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mode Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/modes/switch": {
+      "post": {
+        "tags": [
+          "modes"
+        ],
+        "summary": "Switch Mode",
+        "description": "Switch to a different mode.",
+        "operationId": "switch_mode_api_modes_switch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModeSwitchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeSwitchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scoring/score": {
+      "post": {
+        "tags": [
+          "scoring"
+        ],
+        "summary": "Score Response",
+        "description": "Score a single interview response in real-time.",
+        "operationId": "score_response_scoring_score_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apps__scoring__schemas__ScoreRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScoreResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scoring/session/summary": {
+      "get": {
+        "tags": [
+          "scoring"
+        ],
+        "summary": "Get Session Summary",
+        "description": "Get summary of the current scoring session.",
+        "operationId": "get_session_summary_scoring_session_summary_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scoring/session/reset": {
+      "post": {
+        "tags": [
+          "scoring"
+        ],
+        "summary": "Reset Session",
+        "description": "Reset the current scoring session.",
+        "operationId": "reset_session_scoring_session_reset_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scoring/skill-gaps": {
+      "post": {
+        "tags": [
+          "scoring"
+        ],
+        "summary": "Analyze Skill Gaps",
+        "description": "Analyze skill gaps across interview categories.",
+        "operationId": "analyze_skill_gaps_scoring_skill_gaps_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apps__scoring__schemas__SkillGapRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/apps__scoring__schemas__SkillGapResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Analyze Skill Gaps Scoring Skill Gaps Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scoring/performance": {
+      "post": {
+        "tags": [
+          "scoring"
+        ],
+        "summary": "Get Performance Metrics",
+        "description": "Calculate performance metrics across multiple sessions.",
+        "operationId": "get_performance_metrics_scoring_performance_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerformanceMetricsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PerformanceMetricsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deepfake/detect/voice": {
+      "post": {
+        "tags": [
+          "deepfake"
+        ],
+        "summary": "Detect Voice Deepfake",
+        "description": "Detect voice deepfake artifacts in an audio file.",
+        "operationId": "detect_voice_deepfake_deepfake_detect_voice_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_detect_voice_deepfake_deepfake_detect_voice_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deepfake/detect/video": {
+      "post": {
+        "tags": [
+          "deepfake"
+        ],
+        "summary": "Detect Video Deepfake",
+        "description": "Detect video deepfake manipulation (single frame analysis).",
+        "operationId": "detect_video_deepfake_deepfake_detect_video_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_detect_video_deepfake_deepfake_detect_video_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deepfake/detect/combined": {
+      "post": {
+        "tags": [
+          "deepfake"
+        ],
+        "summary": "Detect Combined Deepfake",
+        "description": "Run both voice and video deepfake detection.",
+        "operationId": "detect_combined_deepfake_deepfake_detect_combined_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_detect_combined_deepfake_deepfake_detect_combined_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/background/status": {
+      "get": {
+        "tags": [
+          "background"
+        ],
+        "summary": "Get Status",
+        "description": "Get background monitoring status.",
+        "operationId": "get_status_background_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/background/system-stats": {
+      "get": {
+        "tags": [
+          "background"
+        ],
+        "summary": "Get System Stats",
+        "description": "Get system resource usage.",
+        "operationId": "get_system_stats_background_system_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/background/analyze-transcript": {
+      "post": {
+        "tags": [
+          "background"
+        ],
+        "summary": "Analyze Transcript",
+        "description": "Analyze a transcript segment for interview triggers.",
+        "operationId": "analyze_transcript_background_analyze_transcript_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeTranscriptRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/background/performance-mode": {
+      "post": {
+        "tags": [
+          "background"
+        ],
+        "summary": "Set Performance Mode",
+        "description": "Set monitoring performance mode.",
+        "operationId": "set_performance_mode_background_performance_mode_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerformanceModeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/background/battery-warnings": {
+      "get": {
+        "tags": [
+          "background"
+        ],
+        "summary": "Get Battery Warnings",
+        "description": "Check battery status and return warnings.",
+        "operationId": "get_battery_warnings_background_battery_warnings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orchestrator/generate": {
+      "post": {
+        "tags": [
+          "orchestrator"
+        ],
+        "summary": "Generate Answer",
+        "description": "Generate an interview answer using the LLM service.",
+        "operationId": "generate_answer_orchestrator_generate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateAnswerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateAnswerResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orchestrator/health": {
+      "get": {
+        "tags": [
+          "orchestrator"
+        ],
+        "summary": "Orchestrator Health",
+        "description": "Check LLM service health.",
+        "operationId": "orchestrator_health_orchestrator_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/skill-gaps": {
+      "post": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Analyze Skill Gaps",
+        "description": "Analyze skill gaps across interview categories.",
+        "operationId": "analyze_skill_gaps_analytics_skill_gaps_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apps__analytics__router__SkillGapRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/apps__analytics__router__SkillGapResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Analyze Skill Gaps Analytics Skill Gaps Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/performance": {
+      "post": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Performance Metrics",
+        "description": "Calculate performance metrics across multiple sessions.",
+        "operationId": "get_performance_metrics_analytics_performance_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerformanceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PerformanceResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/dashboard": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Dashboard Stats",
+        "description": "Get aggregated dashboard statistics.",
+        "operationId": "get_dashboard_stats_analytics_dashboard_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Admin Dashboard",
+        "operationId": "admin_dashboard_admin__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-docs": {
+      "get": {
+        "tags": [
+          "docs"
+        ],
+        "summary": "Api Documentation",
+        "operationId": "api_documentation_api_docs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healer/run": {
+      "get": {
+        "tags": [
+          "healer"
+        ],
+        "summary": "Run Diagnostics",
+        "operationId": "run_diagnostics_healer_run_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healer/run-and-fix": {
+      "post": {
+        "tags": [
+          "healer"
+        ],
+        "summary": "Run And Fix",
+        "operationId": "run_and_fix_healer_run_and_fix_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healer/health": {
+      "get": {
+        "tags": [
+          "healer"
+        ],
+        "summary": "Healer Health",
+        "operationId": "healer_health_healer_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/interview/start": {
+      "post": {
+        "tags": [
+          "interview"
+        ],
+        "summary": "Start Session",
+        "description": "Start a new interview session.",
+        "operationId": "start_session_interview_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterviewSessionCreate",
+                "default": {
+                  "user_profile": {},
+                  "company_context": {}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewSessionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/interview/{session_id}/stop": {
+      "post": {
+        "tags": [
+          "interview"
+        ],
+        "summary": "Stop Session",
+        "description": "Stop an interview session.",
+        "operationId": "stop_session_interview__session_id__stop_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewSessionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/interview/question": {
+      "post": {
+        "tags": [
+          "interview"
+        ],
+        "summary": "Submit Question",
+        "description": "Submit a text question to the interview engine.",
+        "operationId": "submit_question_interview_question_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterviewQuestionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewAnswerResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/interview/audio": {
+      "post": {
+        "tags": [
+          "interview"
+        ],
+        "summary": "Process Audio",
+        "description": "Process audio input through the interview engine.",
+        "operationId": "process_audio_interview_audio_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterviewAudioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewAudioResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/interview/{session_id}/stats": {
+      "get": {
+        "tags": [
+          "interview"
+        ],
+        "summary": "Get Session Stats",
+        "description": "Get stats for an active session.",
+        "operationId": "get_session_stats_interview__session_id__stats_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/interview/health": {
+      "get": {
+        "tags": [
+          "interview"
+        ],
+        "summary": "Interview Health",
+        "description": "Check interview service health.",
+        "operationId": "interview_health_interview_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "summary": "Metrics",
+        "operationId": "metrics_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccessTokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token"
+        ],
+        "title": "AccessTokenResponse"
+      },
+      "AnalyzeTranscriptRequest": {
+        "properties": {
+          "transcript": {
+            "type": "string",
+            "title": "Transcript"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transcript"
+        ],
+        "title": "AnalyzeTranscriptRequest"
+      },
+      "Body_clone_voice_voice_clone_post": {
+        "properties": {
+          "audio": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Audio"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "audio",
+          "user_id"
+        ],
+        "title": "Body_clone_voice_voice_clone_post"
+      },
+      "Body_detect_combined_deepfake_deepfake_detect_combined_post": {
+        "properties": {
+          "audio": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Audio"
+          },
+          "video": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Video"
+          },
+          "sample_rate": {
+            "type": "integer",
+            "title": "Sample Rate",
+            "default": 16000
+          }
+        },
+        "type": "object",
+        "required": [
+          "audio",
+          "video"
+        ],
+        "title": "Body_detect_combined_deepfake_deepfake_detect_combined_post"
+      },
+      "Body_detect_video_deepfake_deepfake_detect_video_post": {
+        "properties": {
+          "video": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Video"
+          }
+        },
+        "type": "object",
+        "required": [
+          "video"
+        ],
+        "title": "Body_detect_video_deepfake_deepfake_detect_video_post"
+      },
+      "Body_detect_voice_deepfake_deepfake_detect_voice_post": {
+        "properties": {
+          "audio": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Audio"
+          },
+          "sample_rate": {
+            "type": "integer",
+            "title": "Sample Rate",
+            "default": 16000
+          }
+        },
+        "type": "object",
+        "required": [
+          "audio"
+        ],
+        "title": "Body_detect_voice_deepfake_deepfake_detect_voice_post"
+      },
+      "CloneResponse": {
+        "properties": {
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile_id"
+        ],
+        "title": "CloneResponse"
+      },
+      "DetectionResponse": {
+        "properties": {
+          "is_deepfake": {
+            "type": "boolean",
+            "title": "Is Deepfake"
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_deepfake",
+          "confidence"
+        ],
+        "title": "DetectionResponse"
+      },
+      "FaceProfileCreate": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "photo_path": {
+            "type": "string",
+            "title": "Photo Path"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "photo_path"
+        ],
+        "title": "FaceProfileCreate"
+      },
+      "FaceProfileResponse": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "embedding_stored": {
+            "type": "boolean",
+            "title": "Embedding Stored"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "message",
+          "embedding_stored"
+        ],
+        "title": "FaceProfileResponse"
+      },
+      "FaceVerifyRequest": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "image_data": {
+            "type": "string",
+            "title": "Image Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "image_data"
+        ],
+        "title": "FaceVerifyRequest"
+      },
+      "FaceVerifyResponse": {
+        "properties": {
+          "verified": {
+            "type": "boolean",
+            "title": "Verified"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "verified",
+          "confidence"
+        ],
+        "title": "FaceVerifyResponse"
+      },
+      "FeedbackRequest": {
+        "properties": {
+          "scores": {
+            "items": {
+              "additionalProperties": {
+                "type": "number"
+              },
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Scores"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scores"
+        ],
+        "title": "FeedbackRequest"
+      },
+      "FeedbackResponse": {
+        "properties": {
+          "overall_rating": {
+            "type": "number",
+            "title": "Overall Rating"
+          },
+          "strengths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Strengths"
+          },
+          "areas_for_improvement": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Areas For Improvement"
+          },
+          "specific_tips": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Specific Tips"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "overall_rating",
+          "strengths",
+          "areas_for_improvement",
+          "specific_tips",
+          "summary"
+        ],
+        "title": "FeedbackResponse"
+      },
+      "GenerateAnswerRequest": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "question_type": {
+            "type": "string",
+            "title": "Question Type",
+            "default": "hr"
+          },
+          "candidate_profile": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Candidate Profile",
+            "default": {}
+          },
+          "conversation_history": {
+            "items": {},
+            "type": "array",
+            "title": "Conversation History",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "question"
+        ],
+        "title": "GenerateAnswerRequest"
+      },
+      "GenerateAnswerResponse": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer"
+        ],
+        "title": "GenerateAnswerResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "InterviewAnswerResponse": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "agent_type": {
+            "type": "string",
+            "title": "Agent Type"
+          },
+          "follow_ups": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Follow Ups",
+            "default": []
+          },
+          "avatar_data": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avatar Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "confidence",
+          "agent_type"
+        ],
+        "title": "InterviewAnswerResponse"
+      },
+      "InterviewAudioRequest": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "audio_base64": {
+            "type": "string",
+            "title": "Audio Base64"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "audio_base64"
+        ],
+        "title": "InterviewAudioRequest"
+      },
+      "InterviewAudioResponse": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "transcript": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transcript"
+          },
+          "answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answer"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "avatar": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avatar"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "InterviewAudioResponse"
+      },
+      "InterviewQuestionRequest": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "default": "general"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty",
+            "default": "medium"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "text"
+        ],
+        "title": "InterviewQuestionRequest"
+      },
+      "InterviewSessionCreate": {
+        "properties": {
+          "user_profile": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "User Profile",
+            "default": {}
+          },
+          "company_context": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Company Context",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "title": "InterviewSessionCreate"
+      },
+      "InterviewSessionResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "ended_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "title": "InterviewSessionResponse"
+      },
+      "ListProfilesResponse": {
+        "properties": {
+          "profiles": {
+            "items": {
+              "$ref": "#/components/schemas/VoiceProfileResponse"
+            },
+            "type": "array",
+            "title": "Profiles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profiles"
+        ],
+        "title": "ListProfilesResponse"
+      },
+      "LivenessRequest": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "image_data": {
+            "type": "string",
+            "title": "Image Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "image_data"
+        ],
+        "title": "LivenessRequest"
+      },
+      "LivenessResponse": {
+        "properties": {
+          "is_live": {
+            "type": "boolean",
+            "title": "Is Live"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "blink_detected": {
+            "type": "boolean",
+            "title": "Blink Detected"
+          },
+          "head_movement": {
+            "type": "boolean",
+            "title": "Head Movement"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_live",
+          "confidence",
+          "blink_detected",
+          "head_movement"
+        ],
+        "title": "LivenessResponse"
+      },
+      "ModeListResponse": {
+        "properties": {
+          "modes": {
+            "items": {
+              "$ref": "#/components/schemas/ModeResponse"
+            },
+            "type": "array",
+            "title": "Modes"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "modes",
+          "count"
+        ],
+        "title": "ModeListResponse"
+      },
+      "ModeResponse": {
+        "properties": {
+          "mode_id": {
+            "type": "string",
+            "title": "Mode Id"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "icon": {
+            "type": "string",
+            "title": "Icon"
+          },
+          "agent_classes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Agent Classes"
+          },
+          "default_agent": {
+            "type": "string",
+            "title": "Default Agent"
+          },
+          "required_context": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Required Context"
+          },
+          "ui_components": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ui Components"
+          },
+          "default_view": {
+            "type": "string",
+            "title": "Default View"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mode_id",
+          "display_name",
+          "description",
+          "icon",
+          "agent_classes",
+          "default_agent",
+          "required_context",
+          "ui_components",
+          "default_view"
+        ],
+        "title": "ModeResponse"
+      },
+      "ModeSwitchRequest": {
+        "properties": {
+          "mode_id": {
+            "type": "string",
+            "title": "Mode Id"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mode_id"
+        ],
+        "title": "ModeSwitchRequest"
+      },
+      "ModeSwitchResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/ModeResponse"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "mode",
+          "message"
+        ],
+        "title": "ModeSwitchResponse"
+      },
+      "PerformanceMetricsRequest": {
+        "properties": {
+          "session_scores": {
+            "items": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Session Scores",
+            "description": "List of sessions, each a list of score dicts with 'category' and 'overall'"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_scores"
+        ],
+        "title": "PerformanceMetricsRequest",
+        "description": "Request to calculate performance metrics across sessions."
+      },
+      "PerformanceMetricsResponse": {
+        "properties": {
+          "total_sessions": {
+            "type": "integer",
+            "title": "Total Sessions"
+          },
+          "average_score": {
+            "type": "number",
+            "title": "Average Score"
+          },
+          "improvement_rate": {
+            "type": "number",
+            "title": "Improvement Rate"
+          },
+          "strongest_category": {
+            "type": "string",
+            "title": "Strongest Category"
+          },
+          "weakest_category": {
+            "type": "string",
+            "title": "Weakest Category"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_sessions",
+          "average_score",
+          "improvement_rate",
+          "strongest_category",
+          "weakest_category"
+        ],
+        "title": "PerformanceMetricsResponse",
+        "description": "Response with performance metrics."
+      },
+      "PerformanceModeRequest": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "title": "Mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mode"
+        ],
+        "title": "PerformanceModeRequest"
+      },
+      "PerformanceRequest": {
+        "properties": {
+          "session_scores": {
+            "items": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Session Scores"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_scores"
+        ],
+        "title": "PerformanceRequest"
+      },
+      "PerformanceResponse": {
+        "properties": {
+          "total_sessions": {
+            "type": "integer",
+            "title": "Total Sessions"
+          },
+          "average_score": {
+            "type": "number",
+            "title": "Average Score"
+          },
+          "improvement_rate": {
+            "type": "number",
+            "title": "Improvement Rate"
+          },
+          "strongest_category": {
+            "type": "string",
+            "title": "Strongest Category"
+          },
+          "weakest_category": {
+            "type": "string",
+            "title": "Weakest Category"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_sessions",
+          "average_score",
+          "improvement_rate",
+          "strongest_category",
+          "weakest_category"
+        ],
+        "title": "PerformanceResponse"
+      },
+      "ScoreResponse": {
+        "properties": {
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "clarity": {
+            "type": "number",
+            "title": "Clarity"
+          },
+          "relevance": {
+            "type": "number",
+            "title": "Relevance"
+          },
+          "response_time": {
+            "type": "number",
+            "title": "Response Time"
+          },
+          "overall": {
+            "type": "number",
+            "title": "Overall"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          }
+        },
+        "type": "object",
+        "required": [
+          "confidence",
+          "clarity",
+          "relevance",
+          "response_time",
+          "overall",
+          "category"
+        ],
+        "title": "ScoreResponse",
+        "description": "Response with scoring results."
+      },
+      "SessionEndRequest": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id"
+        ],
+        "title": "SessionEndRequest"
+      },
+      "SessionScoreRequest": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "clarity": {
+            "type": "number",
+            "title": "Clarity"
+          },
+          "relevance": {
+            "type": "number",
+            "title": "Relevance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "confidence",
+          "clarity",
+          "relevance"
+        ],
+        "title": "SessionScoreRequest"
+      },
+      "SessionStartResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "message"
+        ],
+        "title": "SessionStartResponse"
+      },
+      "SessionSummaryResponse": {
+        "properties": {
+          "average_score": {
+            "type": "number",
+            "title": "Average Score"
+          },
+          "best_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Best Score"
+          },
+          "worst_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Worst Score"
+          },
+          "total_responses": {
+            "type": "integer",
+            "title": "Total Responses"
+          }
+        },
+        "type": "object",
+        "required": [
+          "average_score",
+          "best_score",
+          "worst_score",
+          "total_responses"
+        ],
+        "title": "SessionSummaryResponse",
+        "description": "Response with session summary."
+      },
+      "SynthesizeRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "exaggeration": {
+            "type": "number",
+            "title": "Exaggeration",
+            "default": 0.5
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "profile_id"
+        ],
+        "title": "SynthesizeRequest"
+      },
+      "SynthesizeResponse": {
+        "properties": {
+          "audio_base64": {
+            "type": "string",
+            "title": "Audio Base64"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "title": "Duration Ms",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "audio_base64"
+        ],
+        "title": "SynthesizeResponse"
+      },
+      "TTSRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 5000,
+            "minLength": 1,
+            "title": "Text"
+          },
+          "voice": {
+            "type": "string",
+            "title": "Voice",
+            "description": "Voice name or accent (nigerian, ghanaian, uk, us, japanese)",
+            "default": "af_heart"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "TTSRequest"
+      },
+      "TTSResponse": {
+        "properties": {
+          "audio_base64": {
+            "type": "string",
+            "title": "Audio Base64"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "title": "Duration Ms",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "audio_base64"
+        ],
+        "title": "TTSResponse"
+      },
+      "TTSStreamRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 5000,
+            "minLength": 1,
+            "title": "Text"
+          },
+          "voice": {
+            "type": "string",
+            "title": "Voice",
+            "default": "af_heart"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "TTSStreamRequest"
+      },
+      "TipResponse": {
+        "properties": {
+          "tip": {
+            "type": "string",
+            "title": "Tip"
+          },
+          "weakest_area": {
+            "type": "string",
+            "title": "Weakest Area"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tip",
+          "weakest_area"
+        ],
+        "title": "TipResponse"
+      },
+      "TokenRefreshRequest": {
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "refresh_token"
+        ],
+        "title": "TokenRefreshRequest"
+      },
+      "TokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "refresh_token"
+        ],
+        "title": "TokenResponse"
+      },
+      "UserLogin": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "UserLogin"
+      },
+      "UserRegister": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "username": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 3,
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 8,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "username",
+          "password"
+        ],
+        "title": "UserRegister"
+      },
+      "UserResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "voice_profile_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voice Profile Id"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "username",
+          "is_active",
+          "created_at"
+        ],
+        "title": "UserResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VoiceProfileResponse": {
+        "properties": {
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": ""
+          },
+          "reference_audio_path": {
+            "type": "string",
+            "title": "Reference Audio Path",
+            "default": ""
+          },
+          "embedding": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embedding"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id"
+        ],
+        "title": "VoiceProfileResponse"
+      },
+      "apps__analytics__router__SkillGapRequest": {
+        "properties": {
+          "scores": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Scores"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scores"
+        ],
+        "title": "SkillGapRequest"
+      },
+      "apps__analytics__router__SkillGapResponse": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "current_score": {
+            "type": "number",
+            "title": "Current Score"
+          },
+          "target_score": {
+            "type": "number",
+            "title": "Target Score"
+          },
+          "gap": {
+            "type": "number",
+            "title": "Gap"
+          },
+          "recommendations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommendations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "current_score",
+          "target_score",
+          "gap",
+          "recommendations"
+        ],
+        "title": "SkillGapResponse"
+      },
+      "apps__coaching__router__ScoreRequest": {
+        "properties": {
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "clarity": {
+            "type": "number",
+            "title": "Clarity"
+          },
+          "relevance": {
+            "type": "number",
+            "title": "Relevance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "confidence",
+          "clarity",
+          "relevance"
+        ],
+        "title": "ScoreRequest"
+      },
+      "apps__scoring__schemas__ScoreRequest": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Question",
+            "description": "The interview question"
+          },
+          "answer": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Answer",
+            "description": "The candidate's answer"
+          },
+          "audio_features": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Audio Features",
+            "description": "Audio features: volume_variance, pitch_variation, speech_rate, filler_words, pause_count, response_time"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "Question category (hr, technical, coding, managerial, general)",
+            "default": "general"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "answer"
+        ],
+        "title": "ScoreRequest",
+        "description": "Request to score a single interview response."
+      },
+      "apps__scoring__schemas__SkillGapRequest": {
+        "properties": {
+          "scores": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Scores",
+            "description": "List of score dicts, each with 'category' (str) and 'overall' (float, 0-100)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scores"
+        ],
+        "title": "SkillGapRequest",
+        "description": "Request to analyze skill gaps."
+      },
+      "apps__scoring__schemas__SkillGapResponse": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "current_score": {
+            "type": "number",
+            "title": "Current Score"
+          },
+          "target_score": {
+            "type": "number",
+            "title": "Target Score"
+          },
+          "gap": {
+            "type": "number",
+            "title": "Gap"
+          },
+          "recommendations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommendations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "current_score",
+          "target_score",
+          "gap",
+          "recommendations"
+        ],
+        "title": "SkillGapResponse",
+        "description": "Response with skill gap analysis."
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

@@ -1,8 +1,20 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from slowapi import Limiter
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 from contextlib import asynccontextmanager
+import sentry_sdk
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+from starlette.responses import Response
 from config.settings import settings
-from config.database import init_db, check_db_health, check_redis_health, check_mongodb_health
+from config.database import (
+    init_db,
+    check_db_health,
+    check_redis_health,
+    check_mongodb_health,
+)
 from apps.auth.router import router as auth_router
 from apps.proctoring.router import router as proctoring_router
 from apps.voice.router import router as voice_router
@@ -16,10 +28,15 @@ from apps.analytics.router import router as analytics_router
 from apps.admin.router import router as admin_router
 from apps.docs.router import router as docs_router
 from apps.healer.router import router as healer_router
+from apps.interview.router import router as interview_router
+
+limiter = Limiter(key_func=get_remote_address)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    if settings.SENTRY_DSN:
+        sentry_sdk.init(dsn=settings.SENTRY_DSN, traces_sample_rate=0.1)
     await init_db()
     yield
 
@@ -31,6 +48,18 @@ app = FastAPI(
     redoc_url="/redoc" if settings.DEBUG else None,
     lifespan=lifespan,
 )
+
+app.state.limiter = limiter
+
+
+def _rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return JSONResponse(
+        status_code=429,
+        content={"detail": f"Rate limit exceeded: {exc.detail}"},
+    )
+
+
+app.add_exception_handler(RateLimitExceeded, _rate_limit_handler)
 
 app.add_middleware(
     CORSMiddleware,
@@ -53,6 +82,7 @@ app.include_router(analytics_router)
 app.include_router(admin_router)
 app.include_router(docs_router)
 app.include_router(healer_router)
+app.include_router(interview_router)
 
 
 @app.get("/health")
@@ -72,3 +102,8 @@ async def health_check():
             "mongodb": "connected" if mongo_ok else "disconnected",
         },
     }
+
+
+@app.get("/metrics")
+def metrics():
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)

@@ -15,6 +15,16 @@ COPY . .
 # Build for production
 RUN pnpm build
 
-# Production: use next start
+# Non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs && \
+    chown -R nextjs:nodejs /app
+USER nextjs
+
 EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
+
+# Production: use next start
 CMD ["pnpm", "start"]

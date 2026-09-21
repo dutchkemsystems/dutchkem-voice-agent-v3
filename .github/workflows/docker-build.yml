@@ -1,0 +1,76 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "frontend/web/**"
+      - "Dockerfile*"
+      - "docker-compose*.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "frontend/web/**"
+      - "Dockerfile*"
+      - "docker-compose*.yml"
+
+jobs:
+  build-backend:
+    name: Build Backend Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build backend image
+        run: |
+          docker build -f backend/Dockerfile -t voice-agent-backend:test backend/
+      - name: Verify image runs
+        run: |
+          docker run --rm -d --name test-backend \
+            -e SECRET_KEY=test-key-for-ci \
+            -e DATABASE_URL=postgresql://test:test@localhost:5432/test \
+            -e MONGODB_URL=mongodb://localhost:27017/test \
+            -p 8000:8000 \
+            voice-agent-backend:test
+          sleep 5
+          docker logs test-backend 2>&1 | head -20
+          docker stop test-backend
+
+  build-frontend:
+    name: Build Frontend Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build frontend image
+        run: |
+          docker build -f frontend/web/Dockerfile -t voice-agent-frontend:test frontend/web/
+      - name: Verify image runs
+        run: |
+          docker run --rm -d --name test-frontend \
+            -e NEXT_PUBLIC_API_URL=http://localhost:8000 \
+            -p 3000:3000 \
+            voice-agent-frontend:test
+          sleep 10
+          docker logs test-frontend 2>&1 | head -20
+          docker stop test-frontend
+
+  docker-compose:
+    name: Docker Compose Up
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start services
+        run: |
+          docker compose up -d
+          sleep 15
+          docker compose ps
+          docker compose logs --tail=50
+      - name: Verify backend health
+        run: |
+          curl -f http://localhost:8000/api/health || echo "Backend health check failed"
+      - name: Verify frontend
+        run: |
+          curl -f http://localhost:3000 || echo "Frontend check failed"
+      - name: Stop services
+        run: docker compose down -v

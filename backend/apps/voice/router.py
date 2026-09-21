@@ -1,7 +1,9 @@
 import base64
 import logging
-from fastapi import APIRouter, File, UploadFile, Form, HTTPException
+from fastapi import APIRouter, File, UploadFile, Form, HTTPException, Request
 from fastapi.responses import StreamingResponse
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from apps.voice.schemas import (
     CloneResponse,
     SynthesizeRequest,
@@ -17,10 +19,13 @@ from apps.voice.tts_service import tts_service
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/voice", tags=["voice"])
+limiter = Limiter(key_func=get_remote_address)
 
 
 @router.post("/clone", response_model=CloneResponse)
+@limiter.limit("10/hour")
 async def clone_voice(
+    request: Request,
     audio: UploadFile = File(...),
     user_id: str = Form(...),
     name: str = Form(default=""),
@@ -41,12 +46,13 @@ async def clone_voice(
 
 
 @router.post("/synthesize", response_model=SynthesizeResponse)
-async def synthesize_voice(request: SynthesizeRequest):
+@limiter.limit("15/min")
+async def synthesize_voice(request: Request, synthesize_request: SynthesizeRequest):
     try:
         audio_bytes = await voice_service.synthesize(
-            text=request.text,
-            profile_id=request.profile_id,
-            exaggeration=request.exaggeration,
+            text=synthesize_request.text,
+            profile_id=synthesize_request.profile_id,
+            exaggeration=synthesize_request.exaggeration,
         )
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -58,9 +64,7 @@ async def synthesize_voice(request: SynthesizeRequest):
 @router.get("/profiles", response_model=ListProfilesResponse)
 async def list_profiles(user_id: str | None = None):
     profiles = await voice_service.list_profiles(user_id=user_id)
-    return ListProfilesResponse(
-        profiles=[VoiceProfileResponse(**p) for p in profiles]
-    )
+    return ListProfilesResponse(profiles=[VoiceProfileResponse(**p) for p in profiles])
 
 
 @router.post("/tts", response_model=TTSResponse)
@@ -81,6 +85,7 @@ async def text_to_speech(request: TTSRequest):
 @router.post("/tts/stream")
 async def text_to_speech_stream(request: TTSStreamRequest):
     """Stream text to speech audio chunks."""
+
     async def generate():
         async for chunk in tts_service.stream_synthesize(
             text=request.text,

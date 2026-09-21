@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { GradientHeader } from "@/components/ColourfulComponents/GradientHeader";
 import { Mic, MicOff, Play, Square } from "lucide-react";
+import { INTERVIEW_AGENTS } from "./agents";
+import { AgentCard } from "./AgentCard";
 
 export default function InterviewPage() {
   const [session, setSession] = useState<InterviewSession | null>(null);
@@ -183,6 +185,20 @@ export default function InterviewPage() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Available Agents */}
+      <div>
+        <h2 className="mb-4 text-lg font-semibold text-[#1A1A2E]">Available Interview Agents</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {INTERVIEW_AGENTS.map((agent) => (
+            <AgentCard
+              key={agent.id}
+              agent={agent}
+              isActive={isActive && session?.status === "active"}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

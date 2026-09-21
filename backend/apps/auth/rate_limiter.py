@@ -7,3 +7,8 @@ REGISTER_LIMIT = "5/hour"
 LOGIN_LIMIT = "10/hour"
 TOKEN_REFRESH_LIMIT = "20/hour"
 VOICE_CLONE_LIMIT = "10/hour"
+
+# GPU-intensive endpoints
+GPU_DETECT_LIMIT = "30/min"
+GPU_VERIFY_LIMIT = "20/min"
+GPU_SYNTHESIZE_LIMIT = "15/min"

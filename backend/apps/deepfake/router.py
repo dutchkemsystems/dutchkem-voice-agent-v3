@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, HTTPException, Request, UploadFile, File, Form
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 import numpy as np
 import io
 
@@ -6,12 +8,15 @@ from apps.deepfake.detector import DeepfakeDetector
 from apps.deepfake.schemas import DetectionResponse
 
 router = APIRouter(prefix="/deepfake", tags=["deepfake"])
+limiter = Limiter(key_func=get_remote_address)
 
 detector = DeepfakeDetector()
 
 
 @router.post("/detect/voice", response_model=DetectionResponse)
+@limiter.limit("30/min")
 async def detect_voice_deepfake(
+    request: Request,
     audio: UploadFile = File(...),
     sample_rate: int = Form(default=16000),
 ):
@@ -30,7 +35,9 @@ async def detect_voice_deepfake(
 
 
 @router.post("/detect/video", response_model=DetectionResponse)
+@limiter.limit("30/min")
 async def detect_video_deepfake(
+    request: Request,
     video: UploadFile = File(...),
 ):
     """Detect video deepfake manipulation (single frame analysis)."""
@@ -48,7 +55,9 @@ async def detect_video_deepfake(
 
 
 @router.post("/detect/combined", response_model=DetectionResponse)
+@limiter.limit("30/min")
 async def detect_combined_deepfake(
+    request: Request,
     audio: UploadFile = File(...),
     video: UploadFile = File(...),
     sample_rate: int = Form(default=16000),

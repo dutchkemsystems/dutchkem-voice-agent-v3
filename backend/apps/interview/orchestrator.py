@@ -4,6 +4,14 @@ from .agents import (
     ManagerAgent,
     TechnicalAgent,
     CodingAgent,
+    ClientMeetingAgent,
+    MentoringAgent,
+    PerformanceReviewAgent,
+    BoardPresentationAgent,
+    SalesAgent,
+    TrainingAgent,
+    InternalCommsAgent,
+    CustomerSupportAgent,
     InterviewQuestion,
     InterviewAnswer,
 )
@@ -19,6 +27,14 @@ class InterviewOrchestrator:
             ManagerAgent(user_profile, company_context, llm_service),
             TechnicalAgent(user_profile, company_context, llm_service),
             CodingAgent(user_profile, company_context, llm_service),
+            ClientMeetingAgent(user_profile, company_context, llm_service),
+            MentoringAgent(user_profile, company_context, llm_service),
+            PerformanceReviewAgent(user_profile, company_context, llm_service),
+            BoardPresentationAgent(user_profile, company_context, llm_service),
+            SalesAgent(user_profile, company_context, llm_service),
+            TrainingAgent(user_profile, company_context, llm_service),
+            InternalCommsAgent(user_profile, company_context, llm_service),
+            CustomerSupportAgent(user_profile, company_context, llm_service),
         ]
 
     def route(self, question: InterviewQuestion) -> Optional:
@@ -27,7 +43,9 @@ class InterviewOrchestrator:
                 return agent
         return None
 
-    async def process_question(self, question: InterviewQuestion) -> Optional[InterviewAnswer]:
+    async def process_question(
+        self, question: InterviewQuestion
+    ) -> Optional[InterviewAnswer]:
         agent = self.route(question)
         if agent is None:
             return None
@@ -35,7 +53,9 @@ class InterviewOrchestrator:
         agent.update_history(question.text, answer.text)
         return answer
 
-    async def process_session(self, questions: List[InterviewQuestion]) -> List[InterviewAnswer]:
+    async def process_session(
+        self, questions: List[InterviewQuestion]
+    ) -> List[InterviewAnswer]:
         answers = []
         for q in questions:
             answer = await self.process_question(q)

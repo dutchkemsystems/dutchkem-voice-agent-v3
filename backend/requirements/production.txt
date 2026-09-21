@@ -19,3 +19,4 @@ bcrypt==4.2.0
 numpy==1.26.4
 alembic==1.13.2
 soundfile==0.12.1
+sentry-sdk>=1.38
