@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { api } from "@/lib/api";
+import { api, setAuthCookie } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,6 +25,7 @@ export default function LoginPage() {
     try {
       const result = await api.auth.login(email, password);
       localStorage.setItem("token", result.access_token);
+      setAuthCookie(result.access_token);
       if (result.refresh_token) {
         localStorage.setItem("refresh_token", result.refresh_token);
       }

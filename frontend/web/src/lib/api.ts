@@ -1,5 +1,15 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+// ponytail: cookie helpers — middleware reads `token` cookie, localStorage is for api.ts auth header.
+// Set both so middleware and fetch auth stay in sync.
+export function setAuthCookie(token: string) {
+  document.cookie = `token=${token}; path=/; SameSite=Lax`;
+}
+
+export function clearAuthCookie() {
+  document.cookie = "token=; path=/; max-age=0";
+}
+
 interface ApiError {
   detail: string;
 }
@@ -23,7 +33,9 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
   if (response.status === 401 || response.status === 403) {
     if (typeof window !== "undefined") {
       localStorage.removeItem("token");
+      localStorage.removeItem("refresh_token");
       localStorage.removeItem("currentMode");
+      clearAuthCookie();
       window.location.href = "/login";
     }
     throw new Error("Session expired. Please log in again.");
