@@ -40,7 +40,16 @@ export default function ProfilePage() {
     setLoading("face");
     setFaceStatus("");
     try {
-      await api.proctoring.registerFace(faceFile);
+      // ponytail: read file as base64, pass as photo_path (backend stores string, doesn't process at registration)
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const userId = user.id || user.user_id || "default";
+      const reader = new FileReader();
+      const base64 = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(faceFile);
+      });
+      await api.proctoring.registerFace({ user_id: userId, photo_path: base64 });
       setFaceStatus("Face registered successfully!");
       setFaceFile(null);
       if (faceInputRef.current) faceInputRef.current.value = "";
